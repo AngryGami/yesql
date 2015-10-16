@@ -72,12 +72,12 @@
 ;; case, we only ever use one group, so we'll unpack the
 ;; single-element list with `first`.
 (defn execute-handler
-  [db sql-and-params call-options]
-  (first (jdbc/execute! db sql-and-params)))
+  [db sql-and-params {:keys [transaction?] :or {transaction? true}}]
+  (first (jdbc/execute! db sql-and-params :transaction? transaction?)))
 
 (defn insert-handler
-  [db [statement & params] call-options]
-  (jdbc/db-do-prepared-return-keys db statement params))
+  [db [statement & params] {:keys [transaction?] :or {transaction? true}}]
+  (jdbc/db-do-prepared-return-keys db transaction? statement params))
 
 (defn query-handler
   [db sql-and-params
