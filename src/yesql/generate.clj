@@ -102,16 +102,24 @@
    query-options]
   (assert name      "Query name is mandatory.")
   (assert statement "Query statement is mandatory.")
-  (let [jdbc-fn (cond
-                  (= (take-last 2 name) [\< \!]) insert-handler
-                  (= (last name) \!) execute-handler
-                  :else query-handler)
+  (let [insert-wrapper (or (:insert-wrapper query-options) identity)
+        execute-wrapper (or (:execute-wrapper query-options) identity)
+        query-wrapper (or (:query-wrapper query-options) identity)
+        global-sql-preproc (:sql-pre-processor-fn query-options)
+        jdbc-fn (cond
+                  (= (take-last 2 name) [\< \!]) (insert-wrapper insert-handler)
+                  (= (last name) \!) (execute-wrapper execute-handler)
+                  :else (query-wrapper query-handler))
         required-args (expected-parameter-list statement)
         global-connection (:connection query-options)
         tokens (tokenize statement)
         real-fn (fn [args call-options]
-                  (let [connection (or (:connection call-options)
-                                       global-connection)]
+                  (let [connection (or (:connection call-options) global-connection)
+                        query-level-preproc (or (:sql-pre-processor-fn call-options) global-sql-preproc)
+                        call-options (dissoc (merge query-options call-options) :sql-pre-processor-fn)
+                        tokens (if-not query-level-preproc
+                                 tokens
+                                 (tokenize (query-level-preproc statement call-options args)))]
                     (assert connection
                             (format (join "\n"
                                           ["No database connection supplied to function '%s',"
