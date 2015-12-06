@@ -56,7 +56,7 @@ Default value is `true` - i.e. each call creates it's own transaction.
 Writing sql sometimes can become tedious and repetitive task when you have to create almost identical sql queries for 
 every table in your schema. Sometimes you might need to construct sql dynamically based on whatever parameters you've received
 e.g. to not do unnecessary joins or just to change `order by` column. It would be nice if yesql supported some sort of 
-temple language that allow to solve cases as above, though there are so many templating frameworks out there - how to choose
+template language that allow to solve cases as above, though there are so many templating frameworks out there - how to choose
 best one? Well... best way would be to use whatever you, as a user of library, prefer. This is why sql pre-processor 
 function feature here for.
 
