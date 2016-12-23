@@ -115,7 +115,7 @@
         tokens (tokenize statement)
         real-fn (fn [args call-options]
                   (let [connection (or (:connection call-options) global-connection)
-                        query-level-preproc (or (:sql-pre-processor-fn call-options) global-sql-preproc)
+                        query-level-preproc (:sql-pre-processor-fn call-options global-sql-preproc)
                         call-options (dissoc (merge query-options call-options) :sql-pre-processor-fn)
                         tokens (if-not query-level-preproc
                                  tokens
