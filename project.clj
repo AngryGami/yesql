@@ -1,4 +1,4 @@
-(defproject hacked-yesql "0.5.1"
+(defproject hacked-yesql "0.5.3"
   :description "Fork of https://github.com/krisajenkins/yesql"
   :url "https://github.com/AngryGami/yesql"
   :license {:name "Eclipse Public License"
